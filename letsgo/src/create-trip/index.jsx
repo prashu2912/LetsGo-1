@@ -1,3 +1,4 @@
+/* global google */
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelList } from '@/constants/options';
@@ -11,11 +12,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 import { FcGoogle } from "react-icons/fc";
-import { useGoogleLogin } from '@react-oauth/google';
 /* ──────────────────────────────────────────────────────────
    NEW lightweight wrapper around google.maps.places.AutocompleteService
    ────────────────────────────────────────────────────────── */
@@ -57,7 +56,7 @@ const PlaceAutoComplete = ({ onSelect }) => {
               key={i}
               onClick={() => {
                 setInput(s.description);
-                onSelect(s.description);
+                onSelect(s.description, s.place_id);
                 setSuggestions([]);
               }}
               className="p-2 cursor-pointer hover:bg-gray-100"
@@ -73,9 +72,12 @@ const PlaceAutoComplete = ({ onSelect }) => {
 
 /* ────────────────────────────────────────────────────────── */
 
+import MapWithPlaces from '@/components/MapWithPlaces';
+
 const CreateTrip = () => {
   const [formData, setFormData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
 
   const handleInputChange = (name, value) => {
     if (name === 'noOfDays') {
@@ -86,8 +88,8 @@ const CreateTrip = () => {
   };
 
 
-  
- 
+
+
   const onGenerateTrip = async () => {
     const user = localStorage.getItem('user');
     if (!user) {
@@ -119,81 +121,122 @@ const CreateTrip = () => {
   };
 
   return (
-    <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10">
-      <h2 className="font-bold text-3xl">Tell us your Travel Preferences 🏕️🏖️</h2>
-      <p className="mt-3 text-shadow-white text-xl">
-        just provide some basic info about ur trip planning
-      </p>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* ── Hero Section ──────────────────────── */}
+      <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-800 text-white pt-24 pb-32 px-5 md:px-20 text-center rounded-b-[3rem] shadow-xl relative overflow-hidden">
+        {/* Subtle decorative background circles */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-400 opacity-10 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl pointer-events-none"></div>
 
-      <div className="mt-20">
-        {/* ── Destination ───────────────────── */}
-        <div>
-          <h2 className="text-xl my-3 font-medium">What's the destination?</h2>
-
-          <PlaceAutoComplete
-            onSelect={(val) => {
-              handleInputChange('location', val);
-            }}
-          />
-        </div>
-
-        {/* ── Days ──────────────────────────── */}
-        <div>
-          <h2 className="text-xl my-3 font-medium">How many days</h2>
-          <Input
-            placeholder="Ex‑2"
-            type="number"
-            min={1}
-            max={10}
-            onChange={(e) => handleInputChange('noOfDays', e.target.value)}
-          />
-        </div>
-
-        {/* ── Budget Cards ──────────────────── */}
-        <div>
-          <h2 className="text-xl my-3 font-medium">What's your Budget</h2>
-          <div className="grid grid-cols-5 gap-5 mt-5">
-            {SelectBudgetOptions.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => handleInputChange('budget', item.title)}
-                className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
-                  formData?.budget === item.title ? 'shadow-lg border-black' : ''
-                }`}
-              >
-                <h2 className="text-4xl">{item.icon}</h2>
-                <h2 className="font-bold text-lg">{item.title}</h2>
-                <h2 className="text-sm text-gray-500">{item.desc}</h2>
-              </div>
-            ))}
-          </div>
-
-          {/* ── Traveller Cards ──────────────── */}
-          <div className="mt-8">
-            <h2 className="text-xl my-3 font-medium">
-              Who do you plan on travelling on your next Adventure
-            </h2>
-            <div className="grid grid-cols-5 gap-5 mt-5">
-              {SelectTravelList.map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleInputChange('traveler', item.people)}
-                  className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${
-                    formData?.traveler === item.people ? 'shadow-lg border-black' : ''
-                  }`}
-                >
-                  <h2 className="text-4xl">{item.icon}</h2>
-                  <h2 className="font-bold text-lg">{item.title}</h2>
-                  <h2 className="text-sm text-gray-500">{item.desc}</h2>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <h2 className="font-extrabold text-4xl md:text-5xl lg:text-6xl leading-tight mb-4 tracking-tight drop-shadow-md">
+          Design Your Dream Trip 🏕️🏖️
+        </h2>
+        <p className="mt-4 text-blue-100 text-lg md:text-2xl font-light drop-shadow">
+          Provide some basic info to get a personalized itinerary beautifully crafted for you.
+        </p>
       </div>
 
-      <div className="my-20 flex justify-center">
-        <Button onClick={onGenerateTrip}>Generate Trip</Button>
+      {/* ── Main Form Card ────────────────────── */}
+      <div className="sm:px-10 md:px-24 lg:px-44 xl:px-64 px-5 -mt-20 relative z-10 w-full">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-100 p-8 md:p-12 w-full transition-all">
+
+          <div className="flex flex-col gap-10">
+            {/* ── Destination ───────────────────── */}
+            <div className="w-full">
+              <h2 className="text-xl md:text-2xl font-semibold mb-3 text-gray-800 flex items-center gap-2">
+                <span className="text-blue-600">📍</span> What's the destination?
+              </h2>
+              <div className="bg-gray-50 p-1 rounded-xl shadow-inner border border-gray-200">
+                <PlaceAutoComplete
+                  onSelect={(val, placeId) => {
+                    handleInputChange('location', val);
+                    setSelectedPlaceId(placeId);
+                  }}
+                />
+              </div>
+
+              {/* ── Map ───────────────────────────── */}
+              {selectedPlaceId && (
+                <div className="mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <h2 className="text-lg mb-2 font-semibold text-gray-700">Map & Popular Attractions</h2>
+                  <div className="rounded-xl overflow-hidden shadow-md border border-gray-200">
+                    <MapWithPlaces placeId={selectedPlaceId} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ── Days ──────────────────────────── */}
+            <div className="w-full">
+              <h2 className="text-xl md:text-2xl font-semibold mb-3 text-gray-800 flex items-center gap-2">
+                <span className="text-indigo-600">⏱️</span> How many days?
+              </h2>
+              <Input
+                placeholder="Ex. 2"
+                type="number"
+                min={1}
+                max={10}
+                className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500 transition-colors"
+                onChange={(e) => handleInputChange('noOfDays', e.target.value)}
+              />
+            </div>
+
+            {/* ── Budget Cards ──────────────────── */}
+            <div className="w-full">
+              <h2 className="text-xl md:text-2xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <span className="text-emerald-500">💰</span> What is Your Budget?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {SelectBudgetOptions.map((item, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleInputChange('budget', item.title)}
+                    className={`p-6 border-2 cursor-pointer rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex flex-col items-center text-center ${formData?.budget === item.title
+                      ? 'border-blue-500 bg-blue-50 shadow-md ring-2 ring-blue-200 outline-none'
+                      : 'border-gray-100 bg-white hover:border-blue-300'
+                      }`}
+                  >
+                    <div className="text-5xl mb-3 mb-2 transform transition-transform group-hover:scale-110">{item.icon}</div>
+                    <h2 className="font-bold text-xl text-gray-800">{item.title}</h2>
+                    <h2 className="text-sm text-gray-500 mt-1">{item.desc}</h2>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Traveller Cards ──────────────── */}
+            <div className="w-full mt-2">
+              <h2 className="text-xl md:text-2xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                <span className="text-rose-500">🧑‍🤝‍🧑</span> Who are you travelling with?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+                {SelectTravelList.map((item, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleInputChange('traveler', item.people)}
+                    className={`p-6 border-2 cursor-pointer rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex flex-col items-center text-center ${formData?.traveler === item.people
+                      ? 'border-indigo-500 bg-indigo-50 shadow-md ring-2 ring-indigo-200'
+                      : 'border-gray-100 bg-white hover:border-indigo-300'
+                      }`}
+                  >
+                    <div className="text-5xl mb-3 transform transition-transform group-hover:scale-110">{item.icon}</div>
+                    <h2 className="font-bold text-xl text-gray-800">{item.title}</h2>
+                    <h2 className="text-sm text-gray-500 mt-1">{item.desc}</h2>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 flex justify-center">
+            <Button
+              className="py-7 px-14 text-xl font-bold rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              onClick={onGenerateTrip}
+            >
+              🚀 Generate My Trip Now
+            </Button>
+          </div>
+        </div>
       </div>
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -205,7 +248,7 @@ const CreateTrip = () => {
               <p>Sign In to the App with the Authentication</p>
 
               <Button
-               
+
                 className="w-full mt-5 flex gap-4 items-center"
               >
                 <FcGoogle className="h-10 w-7" />
