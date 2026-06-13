@@ -1,0 +1,31 @@
+{
+  "tripName": "Solo Parisian Charm: A Budget-Friendly 3-Day Adventure",
+  "hotels": [],
+  "restaurants": [
+    {
+      "name": "L'As du Fallafel",
+      "description": "A legendary spot in the Marais known for serving arguably the best falafel sandwich in Paris. Expect a line, but it moves quickly. It's a true Parisian street food experience.",
+      "cuisine": "Middle Eastern, Street Food",
+      "averagePriceRange": "5-10 EUR",
+      "geoCoordinates": {
+        "lat": 48.8576,
+        "lng": 2.3584
+      },
+      "rating": 4.5,
+      "imageUrl": "https://images.unsplash.com/photo-1596701072971-c9118ca83428?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8ZmFsYWZlbCUyMHBhcmlzfHx8fHx8MTcwMTc2MzQwNw&ixlib=rb-4.0.3&q=80&w=1080"
+    },
+    {
+      "name": "Crêperie Genia",
+      "description": "A charming and authentic crêperie in Montmartre, offering both savory galettes and sweet crêpes at very reasonable prices. Perfect for a quick, delicious, and budget-friendly meal.",
+      "cuisine": "French, Crêpes",
+      "averagePriceRange": "8-15 EUR",
+      "geoCoordinates": {
+        "lat": 48.8876,
+        "lng": 2.3414
+      },
+      "rating": 4.4,
+      "imageUrl": "https://images.unsplash.com/photo-1593409836376-7f32e9b0b4e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8Y3JlcGVzJTIwcGFyaXN8fHx8fHwxNzAxNzYzNDAw&ixlib=rb-4.0.3&q=80&w=1080"
+    },
+    {
+      "name": "Bouillon Chartier Grands Boulevards",
+      "description": "A historic Parisian institution offering classic French dishes in a bustling, grand setting. Known for its incredibly

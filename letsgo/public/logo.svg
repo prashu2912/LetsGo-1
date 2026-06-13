@@ -1,7 +1,51 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M17.343 2.65705L20 0L40 20L20 40L17.3429 37.3429L34.6859 20L17.343 2.65705Z" fill="#D41C1C"></path>
-<path d="M13.8744 6.12564L16.5314 3.46859L33.0628 20L16.5314 36.5314L13.8744 33.8744L27.7487 20L13.8744 6.12564Z" fill="#D41C1C"></path>
-<path d="M0 20L13.0628 6.93718L26.1256 20L13.0628 33.0628L10.4058 30.4058L20.8115 20L13.0628 12.2513L2.65705 22.657L0 20Z" fill="#D41C1C"></path>
-<path d="M13.0628 13.8744L10.4058 16.5314L13.8744 20L6.93718 26.9372L9.59422 29.5942L19.1885 20L13.0628 13.8744Z" fill="#D41C1C"></path>
-<path d="M6.12564 26.1256L3.46859 23.4686L9.56643 17.3708L12.2235 20.0278L6.12564 26.1256Z" fill="#D41C1C"></path>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Vibrant Blue Gradient -->
+    <linearGradient id="primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+    
+    <!-- Vivid Cyan/Sky Gradient -->
+    <linearGradient id="secondary" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+
+    <!-- Warm Accent Gradient for contrast -->
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#EF4444" />
+    </linearGradient>
+
+    <!-- Drop Shadow for depth -->
+    <filter id="shadowPrimary" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#4F46E5" flood-opacity="0.25" />
+    </filter>
+    <filter id="shadowSecondary" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0284C7" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Modern Abstract Globe / Orbit Base -->
+  <circle cx="256" cy="256" r="220" fill="url(#primary)" filter="url(#shadowPrimary)" opacity="0.1" />
+  
+  <!-- Stylized Swoosh / Orbit Line -->
+  <path d="M 90 256 A 166 166 0 1 1 422 256 A 166 166 0 0 1 90 256" stroke="url(#secondary)" stroke-width="24" stroke-linecap="round" stroke-dasharray="600 200" transform="rotate(-45 256 256)" filter="url(#shadowSecondary)"/>
+
+  <!-- Bold Map Pin with dynamic intersection -->
+  <path d="M256 80C190 80 136 134 136 200C136 290 256 432 256 432C256 432 376 290 376 200C376 134 322 80 256 80Z" fill="url(#primary)" filter="url(#shadowPrimary)" />
+  
+  <!-- Pin Hole Cutout with glassmorphism effect -->
+  <circle cx="256" cy="190" r="50" fill="#FFFFFF" fill-opacity="0.95" />
+  <circle cx="256" cy="190" r="25" fill="url(#secondary)" />
+
+  <!-- Sleek Paper Airplane emerging from the pin -->
+  <path d="M190 290 L265 170 L340 290 L265 250 Z" fill="#FFFFFF" filter="url(#shadowSecondary)" />
+  <!-- Plane shadow/fold for 3D effect -->
+  <path d="M265 250 L265 170 L340 290 Z" fill="#E2E8F0" />
+  
+  <!-- Sparkles/Stars for "magic vibe" -->
+  <path d="M120 120 L130 90 L160 80 L130 70 L120 40 L110 70 L80 80 L110 90 Z" fill="url(#accent)" />
+  <path d="M400 360 L405 340 L425 330 L405 320 L400 300 L395 320 L375 330 L395 340 Z" fill="url(#accent)" />
 </svg>
